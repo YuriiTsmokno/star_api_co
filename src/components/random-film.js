@@ -1,19 +1,21 @@
 import React, { PureComponent } from 'react';
 import SwapiService from '../services';
 import Spinner from './spinner/spinner';
+import ErrorIncator from './error-indicator/error-indicator';
 
 export default class RandomFilm extends PureComponent {
     swapiService = new SwapiService();
 
     state = {
         film: {},
-        loading: true
+        loading: true,
+        error: false
     };
 
     constructor() {
         super();
         this.updateFilm();
-    }
+    };
 
     onFilmLoaded = (film) => {
         this.setState({
@@ -22,21 +24,32 @@ export default class RandomFilm extends PureComponent {
         });
     };
 
+    onError = (err) => {
+      this.setState({
+        error: true,
+        loading: false
+      });
+    };
+
     updateFilm() {
-        const id = 2;
+        const id = 20000;
         this.swapiService
             .getFilm(id)
-            .then(this.onFilmLoaded);
-    }
+            .then(this.onFilmLoaded)
+            .catch(this.onError);
+    };
 
     render() {
-        const { film, loading } = this.state;
+        const { film, loading, error } = this.state;
+        const hasData = !(loading || error);
+        const errMsg = error ? <ErrorIncator /> : null;
         const spinner = loading ? <Spinner /> : null;
-        const content = !loading ? <FilmView film={film} /> : null;
+        const content = hasData ? <FilmView film={film} /> : null;
         return (
             <div className="random-film jumbotron rounded">
               {spinner}
               {content}
+              {errMsg}
             </div>
         );
     };
