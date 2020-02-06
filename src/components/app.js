@@ -1,18 +1,27 @@
 import React from 'react';
+import Header from './header';
+import RandomFilm from './random-film';
+import ItemList from './item-list';
+import PersonDetails from './person-details';
+import '../styles/index.css';
 import '../styles/bootstrap.min.css';
-import SwapiService from '../services';
+
 
 const App = () => {
-
-    const swapi = new SwapiService();
-    swapi.getPerson(3).then((p) => {
-        /* people.forEach((p) => {
-            console.log(p.name);
-        }); */
-        console.log(p.name);
-    }); 
-    
-    return (<div>Hello World!</div>);
+    return (
+        <div>
+            <Header />
+            <RandomFilm />
+            <div className="row mb2">
+                <div className="col-md-6">
+                    <ItemList />
+                </div>
+                <div className="col-md-6">
+                    <PersonDetails />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default App;
