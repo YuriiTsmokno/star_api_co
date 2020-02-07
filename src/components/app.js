@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import Header from './header';
 import RandomFilm from './random-film';
 import ItemList from './item-list';
@@ -7,21 +7,46 @@ import '../styles/index.css';
 import '../styles/bootstrap.min.css';
 
 
-const App = () => {
+export default class App extends PureComponent {
+  state = {
+    showRandomFilm: true,
+    selectedPerson: 4
+  };
+
+  toggleRandomFilm = () => {
+    this.setState((state) => {
+      return {
+        showRandomFilm: !state.showRandomFilm
+      };
+    });
+  };
+
+  onPersonSelected = (id) => {
+    this.setState({
+      selectedPerson: id
+    });
+  };
+
+  render() {
+    const film = this.state.showRandomFilm ? <RandomFilm /> : null;
+
     return (
-        <div>
+        <div >
             <Header />
-            <RandomFilm />
+            {film}
+            <button className="toggle-film btn btn-warning btn-lg"
+                    onClick={this.toggleRandomFilm}>
+                Toggle Random film
+            </button>
             <div className="row mb2">
                 <div className="col-md-6">
-                    <ItemList />
+                    <ItemList onItemSelected={this.onPersonSelected} />
                 </div>
                 <div className="col-md-6">
-                    <PersonDetails />
+                    <PersonDetails personId={this.state.selectedPerson} />
                 </div>
             </div>
         </div>
     );
+  };
 };
-
-export default App;

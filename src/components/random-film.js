@@ -7,21 +7,22 @@ export default class RandomFilm extends PureComponent {
     swapiService = new SwapiService();
 
     state = {
-        film: {},
-        loading: true,
-        error: false
+      film: {},
+      loading: true,
+      error: false
     };
 
-    constructor() {
-        super();
-        this.updateFilm();
-    };
+    componentDidMount() {
+      this.updateFilm();
+      this.interval = setInterval(this.updateFilm, 3000);
+    }
 
     onFilmLoaded = (film) => {
-        this.setState({
-          film,
-          loading: false
-        });
+      this.setState({
+        film,
+        loading: false,
+        error: false
+      });
     };
 
     onError = (err) => {
@@ -31,20 +32,24 @@ export default class RandomFilm extends PureComponent {
       });
     };
 
-    updateFilm() {
-        const id = 20000;
-        this.swapiService
-            .getFilm(id)
-            .then(this.onFilmLoaded)
-            .catch(this.onError);
+    updateFilm = () => {
+      const id = Math.floor(Math.random() * 7) + 1;
+      this.swapiService
+          .getFilm(id)
+          .then(this.onFilmLoaded)
+          .catch(this.onError);
     };
 
     render() {
+
         const { film, loading, error } = this.state;
-        const hasData = !(loading || error);
+
         const errMsg = error ? <ErrorIncator /> : null;
         const spinner = loading ? <Spinner /> : null;
+
+        const hasData = !(loading || error);
         const content = hasData ? <FilmView film={film} /> : null;
+
         return (
             <div className="random-film jumbotron rounded">
               {spinner}
@@ -58,10 +63,10 @@ export default class RandomFilm extends PureComponent {
 const FilmView = ({ film }) => {
   const { id, title, director, producer, releaseDate } = film;
   return <>
-    <img className="film-image"
+      <img className="film-image"
         src={`https://starwars-visualguide.com/assets/img/films/${id}.jpg`}
         alt="film" />
-    <div>
+      <div>
         <h4>{title}</h4>
         <ul className="list-group list-group-flush">
             <li className="list-group-item">
@@ -76,7 +81,7 @@ const FilmView = ({ film }) => {
                 <span className="term">Release Date:</span>
                 <span>{releaseDate}</span>
             </li>
-        </ul>
-    </div>
-  </>
+          </ul>
+        </div>
+      </>
 }
