@@ -1,5 +1,9 @@
-.toggle-film {
-  margin-bottom: 1rem;
+.toggle-film-button {
+  margin: 1rem 0.25rem;
+}
+
+.error-button {
+  margin: 1rem 0.25rem;
 }
 
 .header {
@@ -102,4 +106,8 @@
 
 .error-indicator .boom {
   font-size: 1.7rem;
+}
+
+footer hr {
+  background-color: #444;
 }

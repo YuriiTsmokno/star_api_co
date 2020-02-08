@@ -12,11 +12,6 @@ export default class RandomFilm extends PureComponent {
       error: false
     };
 
-    componentDidMount() {
-      this.updateFilm();
-      this.interval = setInterval(this.updateFilm, 3000);
-    }
-
     onFilmLoaded = (film) => {
       this.setState({
         film,
@@ -39,6 +34,15 @@ export default class RandomFilm extends PureComponent {
           .then(this.onFilmLoaded)
           .catch(this.onError);
     };
+
+    componentDidMount() {
+      this.updateFilm();
+      this.interval = setInterval(this.updateFilm, 3000);
+    }
+
+    componentWillUnmount() {
+      clearInterval(this.interval);
+    }
 
     render() {
 
