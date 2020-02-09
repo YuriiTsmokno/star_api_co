@@ -11,7 +11,7 @@ export default class PeoplePage extends PureComponent {
   }
 
   componentDidCatch(error, info) {
-    debugger;
+    //debugger;
     this.setState({
       hasError: true
     });
