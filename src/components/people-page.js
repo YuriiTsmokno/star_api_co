@@ -1,21 +1,18 @@
 import React, { PureComponent } from 'react';
 import ItemList from './item-list';
 import PersonDetails from './person-details';
-import ErrorIncator from './error-indicator/error-indicator';
+import Row from './row';
+import ErrorBoundry from './error-boundry';
+import SwapiService from './services/index';
+
 
 export default class PeoplePage extends PureComponent {
 
-  state = {
-    selectedPerson: 4,
-    hasError: false
-  }
+  swapiService = new SwapiService();
 
-  componentDidCatch(error, info) {
-    //debugger;
-    this.setState({
-      hasError: true
-    });
-  };
+  state = {
+    selectedPerson: 4
+  }
 
   onPersonSelected = (selectedPerson) => {
     this.setState({
@@ -24,21 +21,26 @@ export default class PeoplePage extends PureComponent {
   };
 
   render() {
+    const itemList = (
+      <ItemList
+        onItemSelected={this.onPersonSelected}
+        getData={this.swapiService.getAllPeople}>
+          {(item) => {
+            return `${item.name} (${item.birthYear})`;
+          }}
+      </ItemList>
+    );
 
-    if(this.state.hasError) {
-      return <ErrorIncator />
-    }
+    const personDetails = (
+      <ErrorBoundry>
+        <PersonDetails personId={this.state.selectedPerson} />
+      </ErrorBoundry>
+    );
 
     return (
-      <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList onItemSelected={this.onPersonSelected} />
-        </div>
-        <div className="col-md-6">
-          <PersonDetails personId={this.state.selectedPerson} />
-        </div>
-      </div>
-    )
-  }
-
-}
+      <>
+        <Row left={itemList} right={personDetails} />
+      </>
+    );
+  };
+};

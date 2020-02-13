@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import SwapiService from '../services';
+import SwapiService from './services/index';
 import Spinner from './spinner/spinner';
 import ErrorIncator from './error-indicator/error-indicator';
 
