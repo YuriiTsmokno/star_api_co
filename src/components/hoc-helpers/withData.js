@@ -1,20 +1,30 @@
 import React, { PureComponent } from 'react';
 import Spinner from '../spinner/spinner';
 
-const withData = (View, getData) => {
+const withData = (View) => {
   return class extends PureComponent {
 
     state = {
       data: null
     };
-  
-    componentDidMount() {
-      getData().then((data) => {
+
+    updateData = () => {
+      this.props.getData().then((data) => {
         this.setState({
           data
         });
       });
     };
+  
+    componentDidMount() {
+      this.updateData();
+    };
+
+    componentDidUpdate(prevProps) {
+      if(this.props.getData !== prevProps.getData) {
+        this.updateData();
+      }
+    }
 
     render() {
 

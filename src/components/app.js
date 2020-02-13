@@ -8,12 +8,10 @@ import {
     PersonList,
     PlanetList,
     StarshipList,
-     } from './sw-components/item-lists';
-import {
-  PersonDetails,
-  PlanetDetails,
-  StarshipDetails
-} from './sw-components/details'; 
+  } from './sw-components/item-lists'; 
+import PersonDetails from './sw-components/person-details';
+import PlanetDetails from './sw-components/planet-details';
+import StarshipDetails from './sw-components/starship-details';
 import SwapiService from './services/index';
 import DummySwapiService from './services/dummy-swapi-service';
 import { SwapiServiceProvider } from './swapi-service-context/swapi-service-context';
@@ -23,15 +21,23 @@ import '../styles/bootstrap.min.css';
 
 
 
-export default class App extends PureComponent {
-
-  swapiService = new SwapiService();
-  dummySwapiService = new DummySwapiService();
+export default class App extends PureComponent { 
 
   state = {
     showRandomFilm: true,
-    hasError: false
+    hasError: false,
+    swapiService: new DummySwapiService()
   };
+
+  onServiceChange = () => {
+    this.setState(({swapiService}) => {
+      const Service = swapiService instanceof SwapiService ? DummySwapiService : SwapiService;
+
+      return {
+        swapiService: new Service()
+      }
+    });
+  }
 
   toggleRandomFilm = () => {
     this.setState((state) => {
@@ -56,9 +62,9 @@ export default class App extends PureComponent {
 
     return (
       <ErrorBoundary>
-        <SwapiServiceProvider value={this.dummySwapiService}>
+        <SwapiServiceProvider value={this.state.swapiService}>
           <div className="swapi-app">
-              <Header />
+              <Header onServiceChange={this.onServiceChange} />
               <PersonDetails itemId={4} />
               <PlanetDetails itemId={5} />
               <StarshipDetails itemId={9} />

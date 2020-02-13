@@ -38,6 +38,11 @@
   color: #00bc8c;
 }
 
+.header button {
+  height: 2.2rem;
+  margin-top: 3px;
+}
+
 .random-film {
   display: flex;
   padding: 1rem;
