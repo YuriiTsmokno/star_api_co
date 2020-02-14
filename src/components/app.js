@@ -1,21 +1,15 @@
 import React, { PureComponent } from 'react';
 import Header from './header';
 import Footer from './footer';
-//import RandomFilm from './random-film';
+import RandomFilm from './random-film';
 import ErrorIncator from './error-indicator/error-indicator';
 import ErrorBoundary from './error-boundry';
-import { 
-    PersonList,
-    PlanetList,
-    StarshipList,
-  } from './sw-components/item-lists'; 
-import PersonDetails from './sw-components/person-details';
-import PlanetDetails from './sw-components/planet-details';
-import StarshipDetails from './sw-components/starship-details';
-import SwapiService from './services/index';
+import SwapiService from './services/swapi-service';
 import DummySwapiService from './services/dummy-swapi-service';
 import { SwapiServiceProvider } from './swapi-service-context/swapi-service-context';
-
+import PeoplePage from './pages/people-page';
+import PlanetPage from './pages/planet-page';
+import StarshipPage from './pages/starship-page';
 import '../styles/index.css';
 import '../styles/bootstrap.min.css';
 
@@ -26,7 +20,7 @@ export default class App extends PureComponent {
   state = {
     showRandomFilm: true,
     hasError: false,
-    swapiService: new DummySwapiService()
+    swapiService: new SwapiService()
   };
 
   onServiceChange = () => {
@@ -39,14 +33,6 @@ export default class App extends PureComponent {
     });
   }
 
-  toggleRandomFilm = () => {
-    this.setState((state) => {
-      return {
-        showRandomFilm: !state.showRandomFilm
-      };
-    });
-  };
-
   componentDidCatch() {
     this.setState({
       hasError: true
@@ -58,28 +44,24 @@ export default class App extends PureComponent {
       return <ErrorIncator />;
     }
 
-    //const film = this.state.showRandomFilm ? <RandomFilm /> : null;
+    const film = this.state.showRandomFilm ? <RandomFilm /> : null;
 
     return (
       <ErrorBoundary>
         <SwapiServiceProvider value={this.state.swapiService}>
           <div className="swapi-app">
               <Header onServiceChange={this.onServiceChange} />
-              <PersonDetails itemId={4} />
-              <PlanetDetails itemId={5} />
-              <StarshipDetails itemId={9} />
+              {film}
               <hr style={{background:"#444"}} />
-              <PersonList />
+              <PeoplePage />
               <hr style={{background:"#444"}} />
-              <PlanetList />
+              <PlanetPage />
               <hr style={{background:"#444"}} />
-              <StarshipList />
-
+              <StarshipPage />
               <Footer />
           </div>
         </SwapiServiceProvider>
       </ErrorBoundary>
-
     );
   };
 };
