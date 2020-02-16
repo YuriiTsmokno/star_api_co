@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import SwapiService from './services/swapi-service';
 import Spinner from './spinner/spinner';
 import ErrorIncator from './error-indicator/error-indicator';
@@ -10,6 +11,14 @@ export default class RandomFilm extends PureComponent {
       film: {},
       loading: true,
       error: false
+    };
+
+    static defaultProps = {
+      updateInterval: 3000
+    };
+
+    static propTypes = {
+      updateInterval: PropTypes.number
     };
 
     onFilmLoaded = (film) => {
@@ -36,8 +45,9 @@ export default class RandomFilm extends PureComponent {
     };
 
     componentDidMount() {
+      const { updateInterval } = this.props;
       this.updateFilm();
-      this.interval = setInterval(this.updateFilm, 3000);
+      this.interval = setInterval(this.updateFilm, updateInterval);
     }
 
     componentWillUnmount() {
@@ -45,24 +55,24 @@ export default class RandomFilm extends PureComponent {
     }
 
     render() {
+      const { film, loading, error } = this.state;
 
-        const { film, loading, error } = this.state;
+      const errMsg = error ? <ErrorIncator /> : null;
+      const spinner = loading ? <Spinner /> : null;
 
-        const errMsg = error ? <ErrorIncator /> : null;
-        const spinner = loading ? <Spinner /> : null;
+      const hasData = !(loading || error);
+      const content = hasData ? <FilmView film={film} /> : null;
 
-        const hasData = !(loading || error);
-        const content = hasData ? <FilmView film={film} /> : null;
-
-        return (
-            <div className="random-film jumbotron rounded">
-              {spinner}
-              {content}
-              {errMsg}
-            </div>
-        );
+      return (
+          <div className="random-film jumbotron rounded">
+            {spinner}
+            {content}
+            {errMsg}
+          </div>
+      );
     };
 };
+
 
 const FilmView = ({ film }) => {
   const { id, title, director, producer, releaseDate } = film;
