@@ -3,7 +3,7 @@ import { PlanetList } from '../sw-components/item-lists';
 import PlanetDetails from '../sw-components/planet-details';
 import Row from '../row';
 
-export default class PeoplePage extends PureComponent {
+export default class PlanetPage extends PureComponent {
     state = {
         selectedItem: 7
     };

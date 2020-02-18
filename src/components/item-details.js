@@ -14,7 +14,7 @@ export { Record };
 export default class ItemDetails extends PureComponent {
 
   state = {
-    item: {},
+    item: null,
     image: null,
   };
 
@@ -50,12 +50,15 @@ export default class ItemDetails extends PureComponent {
 
   render() {
     const { item, image } = this.state;
+    if (!item) {
+      return <span>Select an item from a list</span>;
+    }
 
     const view = (
       <>
         <img className="item-image"
           src={image}
-          alt="person" />
+          alt="item" />
         <div className="card-body">
           <h4>{item.name}</h4>
           <ul className="list-group list-group-flush">
